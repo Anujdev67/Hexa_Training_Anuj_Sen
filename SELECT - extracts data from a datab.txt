@@ -1,0 +1,631 @@
+SELECT - extracts data from a database
+UPDATE - updates data in a database
+DELETE - deletes data from a database
+INSERT INTO - inserts new data into a database
+CREATE DATABASE - creates a new database
+ALTER DATABASE - modifies a database
+CREATE TABLE - creates a new table
+ALTER TABLE - modifies a table
+DROP TABLE - deletes a table
+CREATE INDEX - creates an index (search key)
+DROP INDEX - deletes an index
+
+
+// JOINS SQL Implementation
+
+
+use org;
+-- to implement on delete cascade drop table customer
+create table customer(
+id int primary key,
+cname varchar(255),
+Address varchar(225),
+Gender char(2),
+City varchar(225),
+Pincode int
+);
+insert into customer 
+values (1,'Rehan','Delhi','M','Jaipur',null);
+select * from custoworkermer;
+create table order_details(
+order_id int primary key,
+delivery_date date,
+cust_id int,
+foreign key(cust_id) references customer(id)
+-- foreign key(cust_id) references customer(id) on delete cascade
+-- foreign key(cust_id) references customer(id) on delete set null
+);
+
+insert into order_details
+values (3,'2024-09-11',1);
+select * from order_detailsworkerworkers;
+
+CREATE TABLE Project (
+    id INT PRIMARY KEY,
+    empID INT,
+    name VARCHAR(255),
+    startdate DATE,
+    clientID INT
+);
+INSERT INTO Project (id, empID, name, startdate, clientID) VALUES
+(1, 1, 'A', '2021-04-21', 3),
+(2, 2, 'B', '2021-03-12', 1),
+(3, 3, 'C', '2021-01-11', 5),
+(4, 3, 'D', '2021-04-27', 2),
+(5, 5, 'E', '2021-05-01', 4);
+
+CREATE TABLE Employee (
+    id INT PRIMARY KEY,
+    fname VARCHAR(255),
+    lname VARCHAR(255),
+    age INT,
+    emailID VARCHAR(255),
+    phoneNo VARCHAR(50),
+    city VARCHAR(255)
+);
+INSERT INTO Employee (id, fname, lname, age, emailID, phoneNo, city) VALUES
+(1, 'Aman', 'Proto', 32, 'aman@gmail.com', '898', 'Delhi'),
+(2, 'Yagya', 'Narayan', 44, 'yagya@gmail.com', '222', 'Palam'),
+(3, 'Rahul', 'BD', 22, 'rahul@gmail.com', '444', 'Kolkata'),
+(4, 'Jatin', 'Hermit', 31, 'jatin@gmail.com', '666', 'Raipur'),
+(5, 'PK', 'Pandey', 21, 'pk@gmail.com', '555', 'Jaipur');
+
+CREATE TABLE Client (
+    id INT PRIMARY KEY,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    age INT,
+    emailID VARCHAR(255),
+    phoneNo VARCHAR(50),
+    city VARCHAR(255),
+    empID INT
+);
+INSERT INTO Client (id, first_name, last_name, age, emailID, phoneNo, city, empID) VALUES
+(1, 'Mac', 'Rogers', 47, 'mac@hotmail.com', '333', 'Kolkata', 3),
+(2, 'Max', 'Poirier', 27, 'max@gmail.com', '222', 'Kolkata', 3),
+(3, 'Peter', 'Jain', 24, 'peter@abc.com', '111', 'Delhi', 1),
+(4, 'Sushant', 'Aggarwal', 23, 'sushant@yahoo.com', '45454', 'Hyderabad', 5),
+(5, 'Pratap', 'Singh', 36, 'p@xyz.com', '77767', 'Mumbai', 2);
+
+-- JOINS
+select e.id,e.fname,e.lname,p.id,p.name from employee as e
+INNER JOIN project as p on e.id = p.empID;
+-- Fetch out all employee ID's and their contact detail who have been working
+-- from jaipur with the clients name working in Hyderabad
+
+select e.id,e.emailID,e.phoneNo,c.first_name,c.last_name from Employee as e
+INNER JOIN Client as c ON e.id = c.empID where e.city = 'Jaipur' AND c.City = 'Hyderabad';
+
+-- LEFT JOIN
+-- fetch out each project allocated to each employee.
+select * from Employee as e
+LEFT JOIN Project as p ON e.id = p.empID;
+
+-- RIGHT JOIN
+-- list out all the projects along with the employee's name and their respective allocated email ID.
+select p.id,p.name,e.fname,e.lname,e.emailID FROM Employee as e
+RIGHT JOIN Project as p
+ON e.id = p.empID;
+
+-- CROSS JOIN
+-- list out all the combinations possible for the employee's name and projects that can exist
+select e.fname,e.lname,p.id,p.name from Employee as e
+CROSS JOIN Project as p;
+
+-- INNER JOIN without using Join keyword  YES WE CAN by using ,  and WHERE in place of ON
+select e.id,e.fname,e.lname,p.id,p.name from Employee as e,
+Project as p WHERE e.id = p.empID;
+
+--
+
+
+
+
+Kadane's maximum subarray
+public class Solution{
+public int maxSubArray(int[] nums){
+int maxSoFar = nums[0];
+int maxEndingHere = nums[0];
+for(int i=1;i<nums.length;i++){
+maxEndingHere = Math.max(nums[i],maxEndingHere + nums[i]);
+maxSoFar = Math.max(maxSoFar, maxEndingHere);
+}
+return maxSoFar;
+}
+}
+
+//Rk
+
+SELECT * FROM mydatabase.employee;
+create database BookStore;
+use BookStore;
+-- Denormalised Form as of now
+CREATE TABLE BookStoreInfo (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(255),
+    Genre VARCHAR(100),
+    Price DECIMAL(10, 2),
+    AuthorName VARCHAR(255),
+    PublisherName VARCHAR(255),
+    PublisherPhone VARCHAR(15),
+    PublisherLocation VARCHAR(255)
+);
+--
+-- Author table
+CREATE TABLE Author (
+    AuthorID INT PRIMARY KEY,
+    AuthorName VARCHAR(255)
+);
+
+-- Publisher table
+CREATE TABLE Publisher (
+    PublisherID INT PRIMARY KEY,
+    PublisherName VARCHAR(255),
+    PublisherPhone VARCHAR(15),
+    PublisherLocation VARCHAR(255)
+);
+
+-- Book table with foreign keys in 2NF we have to identify functional dependency and separate table 
+CREATE TABLE Book (
+    BookID INT PRIMARY KEY,
+    Title VARCHAR(255),
+    Genre VARCHAR(100),
+    Price DECIMAL(10, 2),
+    AuthorID INT,
+    PublisherID INT,
+    FOREIGN KEY (AuthorID) REFERENCES Author(AuthorID),
+    FOREIGN KEY (PublisherID) REFERENCES Publisher(PublisherID)
+);
+-- in this publisher name and related attributes like publisher location and publisher phone are repeating 
+INSERT INTO Author (AuthorID, AuthorName) VALUES (1, 'Robert Kiyosaki');
+
+INSERT INTO Author (AuthorID, AuthorName) VALUES (2, 'Chetan Bhagat');
+
+INSERT INTO Author (AuthorID, AuthorName) VALUES (3, 'Munshi Premchand');
+
+-- 
+INSERT INTO Publisher (PublisherID, PublisherName, PublisherPhone, PublisherLocation)
+VALUES (1, 'Wukong Publications', '1234567890', 'New York');
+
+INSERT INTO Publisher (PublisherID, PublisherName, PublisherPhone, PublisherLocation)
+VALUES (2, 'Anuj Publications', '1234567897', 'Delhi');
+
+INSERT INTO Publisher (PublisherID, PublisherName, PublisherPhone, PublisherLocation)
+VALUES (3, 'Sahitya Akademee', '9988776655', 'Delhi');
+
+INSERT INTO Book (BookID,Title,Genre,Price,AuthorID,PublisherID)
+VALUES(1,'rich dad poor dad','inner-help',150,1,1);
+-- select
+SELECT * from Book;
+INSERT INTO Book (BookID,Title,Genre,Price,AuthorID,PublisherID)
+VALUES(1,'rich dad poor dad','inner-help',150,1,1);
+INSERT INTO Book (BookID,Title,Genre,Price,AuthorID,PublisherID)
+VALUES(1,'rich dad poor dad','inner-help',150,1,1);
+
+ASSIGNMENT  2
+desc enrollments;
+SELECT * FROM enrollments
+WHERE enrollment_id IS NULL
+OR student_id IS NULL
+OR course_id IS NULL
+OR enrollment_date IS NULL;
+
+DESCRIBE enrollments;
+ALTER TABLE enrollments
+MODIFY student_id INT NOT NULL,
+MODIFY course_id INT NOT NULL,
+MODIFY enrollment_date DATE NOT NULL;
+
+
+
+MYCODE
+
+use hexaware;
+create database SIDB;
+use sidb;
+CREATE TABLE Students (
+    student_id int auto_increment PRIMARY KEY,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    date_of_birth date not null,
+    email varchar(255) unique not null,
+    phone_number varchar(20)
+);
+-- Creating course table for ass2
+CREATE TABLE Courses(
+course_id int auto_increment primary key,
+course_name varchar(255) not null,
+credits int not null,
+teacher_id int,
+foreign key (teacher_id) references Teacher(teacher_id)
+);
+
+CREATE TABLE Teacher (
+    teacher_id int auto_increment primary key,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    email varchar(255) unique not null
+);
+-- enrollments
+CREATE TABLE Enrollments (
+    enrollment_id int auto_increment primary key,
+    student_id int,
+    course_id int,
+    enrollment_date date,
+    foreign key (student_id) references Students(student_id),
+    foreign key (course_id) references Courses(course_id)
+);
+
+CREATE TABLE Teachers (
+    teacher_id int auto_increment primary key,
+    first_name varchar(255),
+    last_name varchar(255),
+    email varchar(255) unique
+);
+CREATE TABLE Payments(
+	payment_id int primary key auto_increment,
+    student_id int,
+    amount decimal(10,2),
+    payment_date date,
+    foreign key (student_id) references Students(student_id)
+    );
+    
+    insert into students (first_name, last_name, date_of_birth, email, phone_number)
+values 
+('Anuj', 'Sen', '2000-05-15', 'anuj.sen@hotmail.com', '9876543210'),
+('Manish', 'Kumar', '1999-04-20', 'manish.kumar@outlook.com', '9123456789'),
+('Aman', 'Sharma', '1998-12-10', 'aman.sharma@outlook.com', '9129876543'),
+('DJ', 'Pandey', '1997-03-30', 'dj.pandey@rediffmail.com', '8987654321'),
+('Rahul', 'Verma', '2001-07-25', 'rahul.verma@hotmail.com', '9654321789'),
+('Pooja', 'Singh', '1996-10-19', 'pooja.singh@outlook.com', '9787654321'),
+('Rohit', 'Mishra', '1998-06-11', 'rohit.mishra@rediffmail.com', '9132456789'),
+('Sakshi', 'Jain', '1997-08-08', 'sakshi.jain@outlook.com', '9219876543'),
+('Neha', 'Chaudhary', '2000-11-23', 'neha.chaudhary@hotmail.com', '9678912345'),
+('Deepak', 'Gupta', '1999-09-02', 'deepak.gupta@hotmail.com', '9876543210');
+
+insert into courses (course_name, credits, teacher_id)
+values
+('Information Technology', 4, 1),
+('Computer Science', 4, 2),
+('Data Science', 3, 3),
+('Artificial Intelligence', 3, 4),
+('Cloud Computing', 3, 5),
+('Machine Learning', 4, 6),
+('Cyber Security', 4, 7),
+('Software Engineering', 4, 8),
+('Java Programming', 3, 1),
+('Database Management', 3, 2);
+
+INSERT INTO enrollments (student_id, course_id, enrollment_date)
+VALUES 
+(1, 9, '2024-01-10'), -- Anuj enrolled in Java Programming
+(2, 1, '2024-02-15'), -- Manish enrolled in IT
+(3, 2, '2024-03-01'), -- Aman enrolled in Computer Science
+(4, 9, '2024-03-10'), -- DJ enrolled in Java Programming
+(5, 3, '2024-04-05'), -- Rahul enrolled in Data Science
+(6, 5, '2024-05-20'), -- Pooja enrolled in Cloud Computing
+(7, 4, '2024-06-25'), -- Rohit enrolled in AI
+(8, 6, '2024-07-14'), -- Sakshi enrolled in Machine Learning
+(9, 7, '2024-08-01'), -- Neha enrolled in Cyber Security
+(10, 8, '2024-09-05'); -- Deepak enrolled in Software Engineering
+
+
+insert into teacher (first_name, last_name, email)
+values
+('RK', 'Sharma', 'rk.sharma@example.com'), -- teacher_id = 1
+('Vikas', 'Rana', 'vikas.rana@example.com'), -- teacher_id = 2
+('Anjali', 'Kapoor', 'anjali.kapoor@example.com'), -- teacher_id = 3
+('Madhav', 'Patel', 'madhav.patel@example.com'), -- teacher_id = 4
+('Nikita', 'Saxena', 'nikita.saxena@example.com'), -- teacher_id = 5
+('Sandeep', 'Kumar', 'sandeep.kumar@example.com'), -- teacher_id = 6
+('Neeraj', 'Gupta', 'neeraj.gupta@example.com'), -- teacher_id = 7
+('Pankaj', 'Verma', 'pankaj.verma@example.com'); -- teacher_id = 8
+
+
+insert into payments (student_id, amount, payment_date)
+values 
+(1, 0.00, '2024-01-15'),  -- Anuj payment for Java Programming
+(2, 15000.00, '2024-02-20'), -- Manish payment for IT
+(3, 20000.00, '2024-03-05'), -- Aman payment for Computer Science
+(4, 0.00, '2024-03-15'),  -- DJ payment for Java Programming
+(5, 18000.00, '2024-04-10'), -- Rahul payment for Data Science
+(6, 17000.00, '2024-05-25'), -- Pooja payment for Cloud Computing
+(7, 25000.00, '2024-06-30'), -- Rohit payment for AI
+(8, 30000.00, '2024-07-20'), -- Sakshi payment for Machine Learning
+(9, 22000.00, '2024-08-05'), -- Neha payment for Cyber Security
+(10, 21000.00, '2024-09-10'); -- Deepak payment for Software Engineering
+
+select * from courses;
+insert into courses (course_name, credits, teacher_id)
+values 
+('IT', 3, 1), -- course_id = 1
+('Computer Science', 4, 2), -- course_id = 2
+('Data Science', 5, 3), -- course_id = 3
+('AI', 3, 4), -- course_id = 4
+('Cloud Computing', 4, 5), -- course_id = 5
+('Machine Learning', 4, 6), -- course_id = 6
+('Cyber Security', 3, 7), -- course_id = 7
+('Software Engineering', 4, 8), -- course_id = 8
+('Java Programming', 3, 9); -- course_id = 9
+
+insert into courses (course_name, credits, teacher_id)
+values 
+('IT', 3, 1), -- course_id = 1, teacher_id = 1 (RK Sharma)
+('Computer Science', 4, 2), -- course_id = 2, teacher_id = 2 (Vikas Rana)
+('Data Science', 5, 3), -- course_id = 3, teacher_id = 3 (Anjali Kapoor)
+('AI', 3, 4), -- course_id = 4, teacher_id = 4 (Madhav Patel)
+('Cloud Computing', 4, 5), -- course_id = 5, teacher_id = 5 (Nikita Saxena)
+('Machine Learning', 4, 6), -- course_id = 6, teacher_id = 6 (Sandeep Kumar)
+('Cyber Security', 3, 7), -- course_id = 7, teacher_id = 7 (Neeraj Gupta)
+('Software Engineering', 4, 8), -- course_id = 8, teacher_id = 8 (Pankaj Verma)
+('Java Programming', 3, 1); -- course_id = 9, teacher_id = 1 (RK Sharma)
+
+
+
+//Running
+
+CREATE TABLE Teacher (
+    teacher_id int auto_increment PRIMARY KEY,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    email varchar(255) unique not null
+);
+
+CREATE TABLE Courses (
+    course_id int auto_increment PRIMARY KEY,
+    course_name varchar(255) not null,
+    credits int not null,
+    teacher_id int,
+    FOREIGN KEY (teacher_id) REFERENCES Teacher(teacher_id)
+);
+
+CREATE TABLE Students (
+    student_id int auto_increment PRIMARY KEY,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    date_of_birth date not null,
+    email varchar(255) unique not null,
+    phone_number varchar(20)
+);
+CREATE TABLE Enrollments (
+    enrollment_id int auto_increment PRIMARY KEY,
+    student_id int,
+    course_id int,
+    enrollment_date date,
+    -- Foreign key to the Students table
+    FOREIGN KEY (student_id) REFERENCES Students(student_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+    -- Foreign key to the Courses table
+    FOREIGN KEY (course_id) REFERENCES Courses(course_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+
+CREATE TABLE Payments(create database SIDB;
+use sidb;
+CREATE TABLE Students (
+    student_id int auto_increment PRIMARY KEY,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    date_of_birth date not null,
+    email varchar(255) unique not null,
+    phone_number varchar(20)
+);
+-- Creating course table for ass2
+CREATE TABLE Courses(
+course_id int auto_increment primary key,
+course_name varchar(255) not null,
+credits int not null,
+teacher_id int,
+foreign key (teacher_id) references Teacher(teacher_id)
+);
+
+CREATE TABLE Teacher (
+    teacher_id int auto_increment primary key,
+    first_name varchar(255) not null,
+    last_name varchar(255) not null,
+    email varchar(255) unique not null
+);
+-- enrollments
+CREATE TABLE Enrollments (
+    enrollment_id int auto_increment primary key,
+    student_id int,
+    course_id int,
+    enrollment_date date,
+    foreign key (student_id) references Students(student_id),
+    foreign key (course_id) references Courses(course_id)
+);
+
+CREATE TABLE Teacher (
+    teacher_id int auto_increment primary key,
+    first_name varchar(255),
+    last_name varchar(255),
+    email varchar(255) unique
+);
+CREATE TABLE Payments(
+	payment_id int primary key auto_increment,
+    student_id int,
+    amount decimal(10,2),
+    payment_date date,
+    foreign key (student_id) references Students(student_id)
+    );
+    
+    insert into students (first_name, last_name, date_of_birth, email, phone_number)
+values 
+('Anuj', 'Sen', '2000-05-15', 'anuj.sen@hotmail.com', '9876543210'),
+('Manish', 'Kumar', '1999-04-20', 'manish.kumar@outlook.com', '9123456789'),
+('Aman', 'Sharma', '1998-12-10', 'aman.sharma@outlook.com', '9129876543'),
+('DJ', 'Pandey', '1997-03-30', 'dj.pandey@rediffmail.com', '8987654321'),
+('Rahul', 'Verma', '2001-07-25', 'rahul.verma@hotmail.com', '9654321789'),
+('Pooja', 'Singh', '1996-10-19', 'pooja.singh@outlook.com', '9787654321'),
+('Rohit', 'Mishra', '1998-06-11', 'rohit.mishra@rediffmail.com', '9132456789'),
+('Sakshi', 'Jain', '1997-08-08', 'sakshi.jain@outlook.com', '9219876543'),
+('Neha', 'Chaudhary', '2000-11-23', 'neha.chaudhary@hotmail.com', '9678912345'),
+('Deepak', 'Gupta', '1999-09-02', 'deepak.gupta@hotmail.com', '9876543210');
+
+insert into courses (course_name, credits, teacher_id)
+values
+('Information Technology', 4, 1),
+('Computer Science', 4, 2),
+('Data Science', 3, 3),
+('Artificial Intelligence', 3, 4),
+('Cloud Computing', 3, 5),
+('Machine Learning', 4, 6),
+('Cyber Security', 4, 7),
+('Software Engineering', 4, 8),
+('Java Programming', 3, 1),
+('Database Management', 3, 2);
+
+INSERT INTO enrollments (student_id, course_id, enrollment_date)
+VALUES 
+(1, 9, '2024-01-10'), -- Anuj enrolled in Java Programming
+(2, 1, '2024-02-15'), -- Manish enrolled in IT
+(3, 2, '2024-03-01'), -- Aman enrolled in Computer Science
+(4, 9, '2024-03-10'), -- DJ enrolled in Java Programming
+(5, 3, '2024-04-05'), -- Rahul enrolled in Data Science
+(6, 5, '2024-05-20'), -- Pooja enrolled in Cloud Computing
+(7, 4, '2024-06-25'), -- Rohit enrolled in AI
+(8, 6, '2024-07-14'), -- Sakshi enrolled in Machine Learning
+(9, 7, '2024-08-01'), -- Neha enrolled in Cyber Security
+(10, 8, '2024-09-05'); -- Deepak enrolled in Software Engineering
+
+
+insert into teacher (first_name, last_name, email)
+values
+('RK', 'Sharma', 'rk.sharma@example.com'), -- teacher_id = 1
+('Vikas', 'Rana', 'vikas.rana@example.com'), -- teacher_id = 2
+('Anjali', 'Kapoor', 'anjali.kapoor@example.com'), -- teacher_id = 3
+('Madhav', 'Patel', 'madhav.patel@example.com'), -- teacher_id = 4
+('Nikita', 'Saxena', 'nikita.saxena@example.com'), -- teacher_id = 5
+('Sandeep', 'Kumar', 'sandeep.kumar@example.com'), -- teacher_id = 6
+('Neeraj', 'Gupta', 'neeraj.gupta@example.com'), -- teacher_id = 7
+('Pankaj', 'Verma', 'pankaj.verma@example.com'); -- teacher_id = 8
+
+
+
+
+
+insert into payments (student_id, amount, payment_date)
+values 
+(1, 0.00, '2024-01-15'),  -- Anuj payment for Java Programming
+(2, 15000.00, '2024-02-20'), -- Manish payment for IT
+(3, 20000.00, '2024-03-05'), -- Aman payment for Computer Science
+(4, 0.00, '2024-03-15'),  -- DJ payment for Java Programming
+(5, 18000.00, '2024-04-10'), -- Rahul payment for Data Science
+(6, 17000.00, '2024-05-25'), -- Pooja payment for Cloud Computing
+(7, 25000.00, '2024-06-30'), -- Rohit payment for AI
+(8, 30000.00, '2024-07-20'), -- Sakshi payment for Machine Learning
+(9, 22000.00, '2024-08-05'), -- Neha payment for Cyber Security
+(10, 21000.00, '2024-09-10'); -- Deepak payment for Software Engineering
+
+select * from courses;
+insert into courses (course_name, credits, teacher_id)
+values 
+('IT', 3, 1), -- course_id = 1
+('Computer Science', 4, 2), -- course_id = 2
+('Data Science', 5, 3), -- course_id = 3
+('AI', 3, 4), -- course_id = 4
+('Cloud Computing', 4, 5), -- course_id = 5
+('Machine Learning', 4, 6), -- course_id = 6
+('Cyber Security', 3, 7), -- course_id = 7
+('Software Engineering', 4, 8), -- course_id = 8
+('Java Programming', 3, 9); -- course_id = 9
+
+insert into courses (course_name, credits, teacher_id)
+values 
+('IT', 3, 1), -- course_id = 1, teacher_id = 1 (RK Sharma)
+('Computer Science', 4, 2), -- course_id = 2, teacher_id = 2 (Vikas Rana)
+('Data Science', 5, 3), -- course_id = 3, teacher_id = 3 (Anjali Kapoor)
+('AI', 3, 4), -- course_id = 4, teacher_id = 4 (Madhav Patel)
+('Cloud Computing', 4, 5), -- course_id = 5, teacher_id = 5 (Nikita Saxena)
+('Machine Learning', 4, 6), -- course_id = 6, teacher_id = 6 (Sandeep Kumar)
+('Cyber Security', 3, 7), -- course_id = 7, teacher_id = 7 (Neeraj Gupta)
+('Software Engineering', 4, 8), -- course_id = 8, teacher_id = 8 (Pankaj Verma)
+('Java Programming', 3, 1); -- course_id = 9, teacher_id = 1 (RK Sharma)
+INSERT INTO Enrollments (ID, StudentID, CourseID, EnrollmentDate)
+VALUES
+(1, 1, 21, '2024-09-01'),
+(2, 2, 22, '2024-09-02'),
+(3, 3, 23, '2024-09-03'),
+(4, 4, 24, '2024-09-04'),
+(5, 5, 25, '2024-09-05'),
+(6, 6, 26, '2024-09-06'),
+(7, 7, 27, '2024-09-07'),
+(8, 8, 28, '2024-09-08'),
+(9, 9, 29, '2024-09-09'),
+(10, 10, 30, '2024-09-10');
+
+
+select * from students;
+select * from enrollments;
+DROP TABLE Courses;
+SHOW CREATE TABLE Enrollments;
+ALTER TABLE Enrollments DROP FOREIGN KEY enrollments_ibfk_2;
+DROP TABLE Courses;
+
+CREATE TABLE Courses (
+    course_id INT AUTO_INCREMENT PRIMARY KEY,
+    course_name VARCHAR(255),
+    credits INT,
+    teacher_id INT,
+    FOREIGN KEY (teacher_id) REFERENCES Teacher(teacher_id)
+);
+ALTER TABLE Enrollments
+ADD CONSTRAINT enrollments_ibfk_2 FOREIGN KEY (course_id) REFERENCES Courses(course_id);
+INSERT INTO Courses (course_name, credits, teacher_id)
+VALUES
+('Information Technology', 4, 1),
+('Computer Science', 4, 2),
+('Data Science', 3, 3),
+('Artificial Intelligence', 3, 4),
+('Cloud Computing', 3, 5),
+('Machine Learning', 4, 6),
+('Cyber Security', 4, 7),
+('Software Engineering', 4, 8),
+('Java Programming', 3, 1),
+('Database Management', 3, 2);
+
+INSERT INTO Enrollments (student_id, course_id, enrollment_date)
+VALUES 
+(1, 9, '2024-01-10'), -- Anuj enrolled in Java Programming
+(2, 1, '2024-02-15'), -- Manish enrolled in Information Technology
+(3, 2, '2024-03-01'), -- Aman enrolled in Computer Science
+(4, 9, '2024-03-10'), -- DJ enrolled in Java Programming
+(5, 3, '2024-04-05'), -- Rahul enrolled in Data Science
+(6, 5, '2024-05-20'), -- Pooja enrolled in Cloud Computing
+(7, 4, '2024-06-25'), -- Rohit enrolled in Artificial Intelligence
+(8, 6, '2024-07-14'), -- Sakshi enrolled in Machine Learning
+(9, 7, '2024-08-01'), -- Neha enrolled in Cyber Security
+(10, 8, '2024-09-05'); -- Deepak enrolled in Software Engineering
+
+INSERT INTO Payments (student_id, amount, payment_date)
+VALUES 
+(1, 5000.00, '2024-01-15'), -- Anuj payment for Java Programming
+(2, 15000.00, '2024-02-20'), -- Manish payment for Information Technology
+(3, 20000.00, '2024-03-05'), -- Aman payment for Computer Science
+(4, 5000.00, '2024-03-15'), -- DJ payment for Java Programming
+(5, 18000.00, '2024-04-10'), -- Rahul payment for Data Science
+(6, 17000.00, '2024-05-25'), -- Pooja payment for Cloud Computing
+(7, 25000.00, '2024-06-30'), -- Rohit payment for Artificial Intelligence
+(8, 30000.00, '2024-07-20'), -- Sakshi payment for Machine Learning
+(9, 22000.00, '2024-08-05'), -- Neha payment for Cyber Security
+(10, 21000.00, '2024-09-10'); -- Deepak payment for Software Engineering
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
